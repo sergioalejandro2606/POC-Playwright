@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { LoginData } from '../data/LoginData';
+import { UserMenuPage } from '../pages/UserMenuPage';
 
 const successfulLogin = LoginData.successfulLogin;
 const invalidLogin = LoginData.invalidLogin;
@@ -10,6 +11,7 @@ test(
   async ({ page }) => {
 
     const loginPage = new LoginPage(page);
+    const userMenuPage = new UserMenuPage(page);
 
     await loginPage.navigate();
 
@@ -19,6 +21,10 @@ test(
     );
 
     await expect(page).toHaveURL(/dashboard/);
+
+    await userMenuPage.logout();
+
+    await expect(page).toHaveURL(/auth/);
   }
 );
 

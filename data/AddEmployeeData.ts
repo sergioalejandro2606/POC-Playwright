@@ -17,7 +17,7 @@ export interface EmptyRequiredFieldsData {
 
 const employeeId = generateEmployeeId();
 
-export const addEmployeeData = {
+export const AddEmployeeData = {
   successfulCreation: {
     testCaseId: 'TC-002',
     description: 'Crear empleado correctamente',

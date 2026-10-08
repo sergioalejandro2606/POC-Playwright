@@ -12,7 +12,7 @@ export const employeeSearchData = {
     testCaseId: 'TC-003',
     description: 'Consultar empleado existente',
     employeeName: 'Andres Franco',
-    employeeId: '999098',
+    employeeId: '588013',
     firstName: 'Andres',
     lastName: 'Franco'
   } satisfies EmployeeSearchData

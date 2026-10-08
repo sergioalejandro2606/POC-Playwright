@@ -4,24 +4,36 @@ import { PIMPage } from '../pages/PIMPage';
 import { EmployeeListPage } from '../pages/EmployeeListPage';
 import { LoginData } from '../data/LoginData';
 import { employeeSearchData } from '../data/EmployeeSearchData';
+import { UserMenuPage } from '../pages/UserMenuPage';
 
 const login = LoginData.successfulLogin;
 const employee = employeeSearchData.existingEmployee;
+
+test.beforeEach(async ({ page }) => {
+  const loginPage = new LoginPage(page);
+
+  await loginPage.navigate();
+
+  await loginPage.login(
+    login.username,
+    login.password
+  );
+});
+
+test.afterEach(async ({ page }) => {
+  const userMenuPage = new UserMenuPage(page);
+
+  await userMenuPage.logout();
+
+  await expect(page).toHaveURL(/auth/);
+});
 
 test(
   `${employee.testCaseId} - ${employee.description}`,
   async ({ page }) => {
 
-    const loginPage = new LoginPage(page);
     const pimPage = new PIMPage(page);
     const employeeListPage = new EmployeeListPage(page);
-
-    await loginPage.navigate();
-
-    await loginPage.login(
-      login.username,
-      login.password
-    );
 
     await pimPage.goToEmployeeList();
 

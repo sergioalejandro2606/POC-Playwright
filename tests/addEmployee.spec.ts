@@ -3,34 +3,42 @@ import { LoginPage } from '../pages/LoginPage';
 import { PIMPage } from '../pages/PIMPage';
 import { AddEmployeePage } from '../pages/AddEmployeePage';
 import { LoginData } from '../data/LoginData';
-import { addEmployeeData } from '../data/AddEmployeeData';
+import { AddEmployeeData } from '../data/AddEmployeeData';
+import { UserMenuPage } from '../pages/UserMenuPage';
 
 const login = LoginData.successfulLogin;
-const employeeData = addEmployeeData.successfulCreation;
-const employeeEmptyData = addEmployeeData.emptyRequiredFields;
+const employeeData = AddEmployeeData.successfulCreation;
+const employeeEmptyData = AddEmployeeData.emptyRequiredFields;
+
+test.beforeEach(async ({ page }) => {
+  const loginPage = new LoginPage(page);
+
+  await loginPage.navigate();
+
+  await loginPage.login(
+    login.username,
+    login.password
+  );
+});
+
+test.afterEach(async ({ page }) => {
+  const userMenuPage = new UserMenuPage(page);
+
+  await userMenuPage.logout();
+
+  await expect(page).toHaveURL(/auth/);
+});
 
 test(
   `${employeeData.testCaseId} - ${employeeData.description}`,
   async ({ page }) => {
 
-    const loginPage = new LoginPage(page);
-    const pimPage = new PIMPage(page);        
+    const pimPage = new PIMPage(page);
     const addEmployeePage = new AddEmployeePage(page);
-
-    await loginPage.navigate();
-
-    await loginPage.login(
-      login.username,
-      login.password
-    );
 
     await pimPage.goToAddEmployee();
 
-    await expect(page).toHaveURL(/dashboard/);
-
-    await addEmployeePage.createEmployee(
-      employeeData
-    );
+    await addEmployeePage.createEmployee(employeeData);
 
     await expect(
       addEmployeePage.getSuccessMessage()
@@ -42,16 +50,8 @@ test(
   `${employeeEmptyData.testCaseId} - ${employeeEmptyData.description}`,
   async ({ page }) => {
 
-    const loginPage = new LoginPage(page);
     const pimPage = new PIMPage(page);
     const addEmployeePage = new AddEmployeePage(page);
-
-    await loginPage.navigate();
-
-    await loginPage.login(
-      login.username,
-      login.password
-    );
 
     await pimPage.goToAddEmployee();
 
